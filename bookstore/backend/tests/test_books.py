@@ -38,6 +38,20 @@ def test_create_and_list_books(client):
     assert client.get("/api/books").json() == [book]
 
 
+def test_browser_origin_can_call_api(client):
+    origin = "http://localhost:5173"
+    response = client.options(
+        "/api/books",
+        headers={
+            "Origin": origin,
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type",
+        },
+    )
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == origin
+
+
 @pytest.mark.parametrize(
     "changes",
     [
