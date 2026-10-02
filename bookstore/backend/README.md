@@ -5,7 +5,8 @@ server (PostgreSQL 16+ recommended for the classroom). Dependencies are installe
 
 ## 1. Create the database
 
-To use the provided container database, run `docker compose up -d db` from `bookstore`.
+To use the provided container database, run `docker compose up -d db` (or
+`podman compose up -d db`) from `bookstore`.
 It creates the database and user below automatically; skip the SQL commands and continue to step 2.
 Check readiness with `docker compose ps`. Stop it with `docker compose down`; the named volume
 preserves data. Adding `-v` deletes that volume and its data.
@@ -86,6 +87,10 @@ input/output, `models.py` maps database tables, and `repository.py` owns SQL and
 There is no service layer until business workflows require one.
 
 - Connection refused: start PostgreSQL and verify the host and port.
+- If PostgreSQL runs in Podman, confirm the **bookstore** container publishes
+  `127.0.0.1:5432->5432/tcp` with `podman ps`. A healthy container for another
+  project, or one showing only `5432/tcp`, is not reachable at the backend's
+  configured address.
 - Authentication failed: check the database user and `.env` credentials.
 - Table does not exist: run `python -m app.init_db` using the virtual environment.
 - Browser CORS error: match `FRONTEND_ORIGIN` to the browser origin exactly, then restart the API.
