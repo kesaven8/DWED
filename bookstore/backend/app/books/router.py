@@ -15,6 +15,9 @@ DatabaseSession = Annotated[Session, Depends(get_session)]
 def list_books(session: DatabaseSession):
     return repository.list_books(session)
 
+@router.get("/{id}", response_model=BookRead)
+def get_book(id: int, session: DatabaseSession):
+    return repository.get_book(session, id)
 
 @router.post("", response_model=BookRead, status_code=status.HTTP_201_CREATED)
 def create_book(data: BookCreate, session: DatabaseSession):
